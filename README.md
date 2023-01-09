@@ -1,0 +1,1 @@
+Golang标准库文档 https://studygolang.com/pkgdoc
