@@ -34,17 +34,37 @@ func main() {
 	// }
 
 	// 同步攜程
-	var wg sync.WaitGroup
-	c := make(chan int)
-	// 加counter
-	wg.Add(1)
-	go waitTest(&wg, c)
-	wg.Add(1)
-	go waitTest(&wg, c)
-	c <- 5
-	// 等counter
-	wg.Wait()
-	close(c)
-	fmt.Println(<-c)
+	// var wg sync.WaitGroup
+	// c := make(chan int)
+	// // 加counter
+	// wg.Add(1)
+	// go waitTest(&wg, c)
+	// wg.Add(1)
+	// go waitTest(&wg, c)
+	// c <- 5
+	// // 等counter
+	// wg.Wait()
+	// close(c)
+	// fmt.Println(<-c)
 
+	// select case
+	intChan := make(chan int)
+	stringChan := make(chan string)
+
+	go func() {
+		// time.Sleep(time.Second * 2)
+		intChan <- 10
+	}()
+	go func() {
+		// time.Sleep(time.Second * 1)
+		stringChan <- "string"
+	}()
+	select {
+	case v := <-intChan:
+		fmt.Println(v)
+	case v := <-stringChan:
+		fmt.Println(v)
+	default:
+		fmt.Println("default")
+	}
 }
