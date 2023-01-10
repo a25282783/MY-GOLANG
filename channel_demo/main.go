@@ -1,5 +1,17 @@
 package main
 
+import (
+	"fmt"
+	"sync"
+)
+
+func waitTest(wg *sync.WaitGroup, c chan int) {
+	// 減counter
+	defer wg.Done()
+	num := <-c
+	num++
+	c <- num
+}
 func main() {
 	// // 遍歷前須關閉
 	// intChan := make(chan int, 3)
@@ -20,5 +32,19 @@ func main() {
 	// } else {
 	// 	fmt.Println(v, ok)
 	// }
+
+	// 同步攜程
+	var wg sync.WaitGroup
+	c := make(chan int)
+	// 加counter
+	wg.Add(1)
+	go waitTest(&wg, c)
+	wg.Add(1)
+	go waitTest(&wg, c)
+	c <- 5
+	// 等counter
+	wg.Wait()
+	close(c)
+	fmt.Println(<-c)
 
 }
